@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Web Socket</title>
+  <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="http://cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
+  <script src="layer/layer.js"></script>
+</head>
+<body>
+<br>
+<div class="container">
+  <div class="col-md-12">
+    <form action="" class="col-md-12">
+      <div class="form-group">
+        <input type="text" class="form-control msg" name="msg">
+      </div>
+      <div class="form-group">
+        <input type="button" class="btn btn-primary send-msg" value="Submit">
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<script type="text/javascript">
+// 创建一个Socket实例
+var socket = new WebSocket('ws://127.0.0.1:9501'); 
+
+// 打开Socket 
+socket.onopen = function(event) { 
+
+  // 发送一个初始化消息
+  // socket.send('I am the client and I\'m listening!'); 
+
+  // 监听消息
+  socket.onmessage = function(event) { 
+    console.log('Client received a message',event); 
+    layer.msg(''+event.data);
+  }; 
+
+  // 监听Socket的关闭
+  socket.onclose = function(event) { 
+    console.log('Client notified socket has closed',event); 
+  }; 
+
+  // 关闭Socket.... 
+  //socket.close() 
+};
+$('.send-msg').click(function(){
+  //
+  // socket.send('test');
+  var msg = $('input.msg').val();
+  if(msg =='' || msg.length <= 0 ){
+    layer.msg('can not empty');
+    return false;
+  }
+  socket.send(msg);
+});
+  // 监听消息
+  socket.onmessage = function(event) { 
+    console.log('Client received a message',event); 
+    layer.msg(''+event.data);
+  };
+</script>
+	
+</body>
+</html>
